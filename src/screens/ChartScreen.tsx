@@ -3,10 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { useTheme } from '../styles/globalStyles';
+import { useAuth } from '../context/AuthContext';
 import LockButton from '../components/LockButton';
 import AsyncService from '../storage/AsyncService';
-
-import { useAuth } from '../context/AuthContext';
 
 export default function ChartScreen() {
   const theme = useTheme();

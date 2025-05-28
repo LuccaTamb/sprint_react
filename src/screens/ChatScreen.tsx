@@ -4,7 +4,6 @@ import { View, TextInput, Button, FlatList, Text, StyleSheet } from 'react-nativ
 import { useTheme } from '../styles/globalStyles';
 import AsyncService from '../storage/AsyncService';
 import { Message } from '../types';
-
 import { useAuth } from '../context/AuthContext';
 
 export default function ChatScreen() {

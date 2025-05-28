@@ -21,9 +21,13 @@ export default function AppsScreen() {
   useEffect(() => {
     // Dados mockados
     const mockApps: AppItem[] = [
-      { id: '1', name: 'App de Apostas', usage: '2h 30m' },
-      { id: '2', name: 'Redes Sociais', usage: '4h 15m' },
-      { id: '3', name: 'Jogos', usage: '1h 00m' },
+      { id: '1', name: 'Bet365',   usage: '2h 37m' },
+      { id: '2', name: 'Betano',   usage: '1h 19m' },
+      { id: '3', name: 'Superbet', usage: '0h 32m' },
+      { id: '4', name: 'KTO',          usage: '1h 56m' },
+      { id: '4', name: 'Sportingbet',          usage: '0h 06m' },
+      { id: '4', name: 'F12 bet',          usage: '1h 47m' },
+      { id: '4', name: 'Betnacional',          usage: '0h 16m' },
     ];
     setApps(mockApps);
   }, []);
