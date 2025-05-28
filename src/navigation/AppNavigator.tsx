@@ -26,7 +26,7 @@ function MainTabNavigator() {
           let iconName;
           if (route.name === 'Home') iconName = 'home';
           else if (route.name === 'Gráficos') iconName = 'bar-graph';
-          else if (route.name === 'Apps') iconName = 'apps';
+          else if (route.name === 'Apps') iconName = 'browser';
           else if (route.name === 'Vídeos') iconName = 'video';
           else if (route.name === 'Chat') iconName = 'chat';
           return <Entypo name={iconName} size={size} color={color} />;
@@ -40,9 +40,6 @@ function MainTabNavigator() {
       <Tab.Screen name="Apps" component={AppsScreen} />
       <Tab.Screen name="Vídeos" component={VideosScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
-      
-      <Tab.Screen name="Aprendizado" component={ScreenLearning} />
-      <Tab.Screen name="Comentários" component={ScreenComments} />
     </Tab.Navigator>
   );
 }
@@ -51,7 +48,7 @@ export default function AppNavigator() {
   const { role, isLoading } = useAuth();
 
   if (isLoading) {
-    return null; // Ou um componente de loading
+    return null;
   }
 
   return (
