@@ -30,3 +30,13 @@ export interface LearningVideo {
     locked: boolean;
   };
 }
+
+export type RootStackParamList = {
+  LoginSelection: undefined;
+  Login: { role: Role }; 
+};
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
