@@ -1,64 +1,67 @@
 // src/screens/LockScreen.tsx
-import React, { useEffect, useRef, useState } from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, Pressable,} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FontAwesome } from '@expo/vector-icons';
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, Pressable } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome } from "@expo/vector-icons";
 
 const STORAGE_KEYS = {
-  LOCKED: 'LOCKED',
-  TIME_LEFT: 'TIME_LEFT',
-  SECURITY_CODE: 'SECURITY_CODE',
+  LOCKED: "LOCKED",
+  UNLOCK_TIMESTAMP: "UNLOCK_TIMESTAMP",
+  SECURITY_CODE: "SECURITY_CODE",
 };
 
 export default function LockScreen() {
-  const [hours, setHours] = useState('');
-  const [minutes, setMinutes] = useState('');
-  const [seconds, setSeconds] = useState('');
-  const [userCodeInput, setUserCodeInput] = useState('');
-  const [securityCode, setSecurityCode] = useState('');
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
+  const [userCodeInput, setUserCodeInput] = useState("");
+  const [securityCode, setSecurityCode] = useState("");
   const [lockTimeLeft, setLockTimeLeft] = useState(0);
   const [locked, setLocked] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const updateRemainingTime = async () => {
+    const unlockAtStr = await AsyncStorage.getItem(
+      STORAGE_KEYS.UNLOCK_TIMESTAMP
+    );
+    const unlockAt = unlockAtStr ? parseInt(unlockAtStr) : 0;
+    const now = Date.now();
+    const remaining = Math.floor((unlockAt - now) / 1000);
+
+    if (remaining > 0) {
+      setLocked(true);
+      setLockTimeLeft(remaining);
+    } else {
+      await AsyncStorage.multiRemove(Object.values(STORAGE_KEYS));
+      setLocked(false);
+      setLockTimeLeft(0);
+    }
+  };
+
   useEffect(() => {
-    const loadStorage = async () => {
-      const savedLocked = await AsyncStorage.getItem(STORAGE_KEYS.LOCKED);
-      const savedTime = await AsyncStorage.getItem(STORAGE_KEYS.TIME_LEFT);
-      const savedCode = await AsyncStorage.getItem(STORAGE_KEYS.SECURITY_CODE);
-      if (savedLocked === 'true' && savedTime) {
-        setLocked(true);
-        setLockTimeLeft(Number(savedTime));
-        setSecurityCode(savedCode || '');
-      }
-    };
-    loadStorage();
+    updateRemainingTime();
   }, []);
 
   useEffect(() => {
-    if (locked && lockTimeLeft > 0) {
+    if (locked) {
       timerRef.current = setInterval(() => {
         setLockTimeLeft((prev) => {
-          const next = prev - 1;
-          AsyncStorage.setItem(STORAGE_KEYS.TIME_LEFT, next.toString());
-          if (next <= 0) {
+          if (prev <= 1) {
             clearInterval(timerRef.current!);
             setLocked(false);
-            AsyncStorage.multiRemove([
-              STORAGE_KEYS.LOCKED,
-              STORAGE_KEYS.TIME_LEFT,
-              STORAGE_KEYS.SECURITY_CODE,
-            ]);
+            AsyncStorage.multiRemove(Object.values(STORAGE_KEYS));
             return 0;
           }
-          return next;
+          return prev - 1;
         });
       }, 1000);
     }
     return () => clearInterval(timerRef.current!);
   }, [locked]);
 
-  const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
+  const generateCode = () =>
+    Math.floor(100000 + Math.random() * 900000).toString();
 
   const handleConfirm = async () => {
     const h = parseInt(hours) || 0;
@@ -67,7 +70,7 @@ export default function LockScreen() {
     const totalSeconds = h * 3600 + m * 60 + s;
 
     if (totalSeconds < 10) {
-      Alert.alert('Tempo inválido', 'Use no mínimo 10 segundos.');
+      Alert.alert("Tempo inválido", "Use no mínimo 10 segundos.");
       return;
     }
 
@@ -78,7 +81,7 @@ export default function LockScreen() {
 
   const verifyCodeAndLock = async () => {
     if (userCodeInput !== securityCode) {
-      Alert.alert('Erro', 'Código incorreto');
+      Alert.alert("Erro", "Código incorreto");
       return;
     }
 
@@ -86,22 +89,27 @@ export default function LockScreen() {
     const m = parseInt(minutes) || 0;
     const s = parseInt(seconds) || 0;
     const totalSeconds = h * 3600 + m * 60 + s;
+    const unlockAt = Date.now() + totalSeconds * 1000;
 
     setLocked(true);
     setLockTimeLeft(totalSeconds);
     await AsyncStorage.multiSet([
-      [STORAGE_KEYS.LOCKED, 'true'],
-      [STORAGE_KEYS.TIME_LEFT, totalSeconds.toString()],
+      [STORAGE_KEYS.LOCKED, "true"],
+      [STORAGE_KEYS.UNLOCK_TIMESTAMP, unlockAt.toString()],
       [STORAGE_KEYS.SECURITY_CODE, securityCode],
     ]);
     setShowModal(false);
-    setUserCodeInput('');
+    setUserCodeInput("");
   };
 
   const formatTime = (seconds: number) => {
-    const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
-    const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
+    const h = Math.floor(seconds / 3600)
+      .toString()
+      .padStart(2, "0");
+    const m = Math.floor((seconds % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
     return `${h} | ${m} | ${s}`;
   };
 
@@ -109,9 +117,9 @@ export default function LockScreen() {
     <>
       <View style={styles.row}>
         <FontAwesome
-          name={locked ? 'lock' : 'unlock'}
+          name={locked ? "lock" : "unlock"}
           size={24}
-          color={locked ? 'red' : 'green'}
+          color={locked ? "red" : "green"}
           style={styles.icon}
         />
         {locked ? (
@@ -174,67 +182,71 @@ export default function LockScreen() {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
     padding: 16,
-  },
-  icon: {
-    marginRight: 8,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    width: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    minWidth: 50,
     textAlign: 'center',
-    padding: 4,
-    marginHorizontal: 2,
-    borderRadius: 4,
+    fontSize: 16,
+    backgroundColor: '#fff',
   },
   sep: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginHorizontal: 2,
+    marginHorizontal: 4,
+    color: '#555',
   },
   button: {
-    backgroundColor: '#333',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginTop: 8,
-    borderRadius: 4,
+    backgroundColor: '#007bff',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 5,
+    marginLeft: 10,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 14,
+    fontWeight: 'bold',
   },
   timer: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ff3333',
+  },
+  icon: {
+    marginRight: 10,
   },
   modalContainer: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
-    padding: 24,
-    borderRadius: 8,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
     alignItems: 'center',
   },
   label: {
-    marginTop: 8,
     fontSize: 16,
-    fontWeight: 'bold',
+    marginBottom: 5,
+    fontWeight: '500',
   },
   code: {
-    fontSize: 24,
-    color: 'red',
+    fontSize: 28,
     fontWeight: 'bold',
-    marginVertical: 8,
+    marginBottom: 15,
+    color: '#333',
   },
 });
