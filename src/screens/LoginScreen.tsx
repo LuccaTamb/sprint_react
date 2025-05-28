@@ -11,24 +11,17 @@ export default function LoginScreen({ route }: { route: LoginScreenRouteProp }) 
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // const handleLogin = async () => {
-  //   try {
-  //     await login(route.params.role, email, password);
-  //   } catch (error) {
-  //     Alert.alert('Erro', error.message);
-  //   }
-  // };
   const handleLogin = async () => {
-  try {
-    await login(route.params.role, email, password);
-  } catch (error) {
-    if (error instanceof Error) {
-      Alert.alert('Erro', error.message);
-    } else {
-      Alert.alert('Erro', 'Ocorreu um erro desconhecido.');
+
+    try {
+      await login(route.params.role, email, password);
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Erro', error.message);
+      } else {
+        Alert.alert('Erro', 'Ocorreu um erro desconhecido.');
+      }
     }
-  }
   };
 
   return (
