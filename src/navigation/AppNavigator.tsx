@@ -10,8 +10,8 @@ import ChartScreen from '../screens/ChartScreen';
 import AppsScreen from '../screens/AppsScreen';
 import VideosScreen from '../screens/VideosScreen';
 import ChatScreen from '../screens/ChatScreen';
-import ScreenLearning from '../screens/ScreenLearning';
-import ScreenComments from '../screens/ScreenComments';
+// import ScreenLearning from '../screens/ScreenLearning';
+// import ScreenComments from '../screens/ScreenComments';
 
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 
