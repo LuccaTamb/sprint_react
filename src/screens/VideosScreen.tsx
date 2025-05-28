@@ -4,14 +4,18 @@ import VideoCard from '../components/VideoCard';
 import { useTheme } from '../styles/globalStyles';
 
 const videos = [
-  { id: '1', title: 'Vídeo Genérico 1', thumbnail: 'https://img.youtube.com/vi/Wj4814pYAYg/mqdefault.jpg', url: 'https://youtube.com/watch?v=Wj4814pYAYg' },
-  { id: '2', title: 'Vídeo Genérico 2', thumbnail: 'https://img.youtube.com/vi/def456/mqdefault.jpg', url: 'https://youtube.com/watch?v=def456' },
-  { id: '3', title: 'Vídeo Genérico 3', thumbnail: 'https://img.youtube.com/vi/ghi789/mqdefault.jpg', url: 'https://youtube.com/watch?v=ghi789' },
-  { id: '4', title: 'Vídeo Genérico 4', thumbnail: 'https://img.youtube.com/vi/jkl012/mqdefault.jpg', url: 'https://youtube.com/watch?v=jkl012' },
+  { id: '1', title: 'Vídeo Genérico 1', thumbnail: 'https://img.youtube.com/vi/ueH75QNaRCE/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=ueH75QNaRCE' },
+  { id: '2', title: 'Vídeo Genérico 2', thumbnail: 'https://img.youtube.com/vi/SGWaWN9gdpg/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=SGWaWN9gdpg' },
+  { id: '3', title: 'Vídeo Genérico 3', thumbnail: 'https://img.youtube.com/vi/4ZIMlyb-DU4/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=4ZIMlyb-DU4' },
+  { id: '4', title: 'Vídeo Genérico 4', thumbnail: 'https://img.youtube.com/vi/Wj4814pYAYg/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=Wj4814pYAYg' },
+  { id: '5', title: 'Vídeo Genérico 4', thumbnail: 'https://img.youtube.com/vi/KYDxlcDi2cU/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=KYDxlcDi2cU' },
+  { id: '6', title: 'Vídeo Genérico 4', thumbnail: 'https://img.youtube.com/vi/wYXig5UCwYU/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=wYXig5UCwYU' },
+  { id: '7', title: 'Vídeo Genérico 4', thumbnail: 'https://img.youtube.com/vi/6sg6n0araLQ/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=6sg6n0araLQ' },
+  { id: '8', title: 'Vídeo Genérico 4', thumbnail: 'https://img.youtube.com/vi/Z0St-tW--nc/mqdefault.jpg', url: 'https://www.youtube.com/watch?v=Z0St-tW--nc' },
 ];
 
 const screenWidth = Dimensions.get('window').width;
-const numColumns = screenWidth < 360 ? 1 : 2; // 360px é bem seguro pra celular
+const numColumns = screenWidth < 360 ? 1 : 2;
 
 export default function VideosScreen() {
   const theme = useTheme();
